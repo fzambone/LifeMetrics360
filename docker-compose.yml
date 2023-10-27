@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  backend:
+    image: lifemetrics360-financialtracker-backend
+    ports:
+      - "8080:8080"
+  
+  frontend:
+    image: lifemetrics360-financialtracker-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+networks:
+  default:
+    name: lifemetrics360-network

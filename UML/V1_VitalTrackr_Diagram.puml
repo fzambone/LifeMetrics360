@@ -1,0 +1,77 @@
+@startuml
+
+title LifeMetrics360 Architecture
+
+actor User
+
+package "Frontend\n(React + MFEs)" {
+  [Login Screen]
+  [Dashboard]
+  [Financial Tracker MFE]
+  [Health Monitor MFE]
+  [Productivity Checker MFE]
+  [Mood Analyzer MFE]
+  [User Settings MFE]
+  [S3 Bucket]
+}
+
+database "MongoDB Atlas" {
+  collections Financial
+  collections Health
+  collections Productivity
+  collections Mood
+}
+
+cloud "AWS" {
+  [API Gateway]
+  [EC2 Instances]
+  queue "RabbitMQ"
+  package "Microservices\n(Go)" {
+    [Financial Microservice]
+    [Health Microservice]
+    [Productivity Microservice]
+    [Mood Microservice]
+  }
+  package "Worker Services\n(Go)" {
+    [Financial Worker]
+    [Health Worker]
+    [Productivity Worker]
+    [Mood Worker]
+  }
+}
+
+User -> [Login Screen]
+[Login Screen] --> [Dashboard]
+[Dashboard] --> [Financial Tracker MFE]
+[Dashboard] --> [Health Monitor MFE]
+[Dashboard] --> [Productivity Checker MFE]
+[Dashboard] --> [Mood Analyzer MFE]
+[Dashboard] --> [User Settings MFE]
+
+[API Gateway] --> [Financial Microservice]
+[API Gateway] --> [Health Microservice]
+[API Gateway] --> [Productivity Microservice]
+[API Gateway] --> [Mood Microservice]
+
+[Financial Microservice] -> RabbitMQ
+[Health Microservice] -> RabbitMQ
+[Productivity Microservice] -> RabbitMQ
+[Mood Microservice] -> RabbitMQ
+
+[Financial Worker] <-- RabbitMQ
+[Health Worker] <-- RabbitMQ
+[Productivity Worker] <-- RabbitMQ
+[Mood Worker] <-- RabbitMQ
+
+[Financial Worker] -> Financial
+[Health Worker] -> Health
+[Productivity Worker] -> Productivity
+[Mood Worker] -> Mood
+
+[Financial Tracker MFE] --> [API Gateway]
+[Health Monitor MFE] --> [API Gateway]
+[Productivity Checker MFE] --> [API Gateway]
+[Mood Analyzer MFE] --> [API Gateway]
+[User Settings MFE] --> [API Gateway]
+
+@enduml

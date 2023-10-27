@@ -1,0 +1,44 @@
+@startuml
+
+title LifeMetrics360 MVP Architecture
+
+actor User
+
+package "Frontend\n(React + MFEs)" {
+  [Login Screen]
+  [Dashboard]
+  [Financial Tracker MFE]
+  [S3 Bucket]
+}
+
+database "MongoDB Atlas" {
+  collections Financial
+}
+
+cloud "AWS" {
+  [API Gateway]
+  [EC2 Instance]
+  queue "RabbitMQ"
+  package "Microservice\n(Go)" {
+    [Financial Microservice]
+  }
+  package "Worker Service\n(Go)" {
+    [Financial Worker]
+  }
+}
+
+User -> [Login Screen]
+[Login Screen] --> [Dashboard]
+[Dashboard] --> [Financial Tracker MFE]
+
+[API Gateway] --> [Financial Microservice]
+
+[Financial Microservice] -> RabbitMQ
+
+[Financial Worker] <-- RabbitMQ
+
+[Financial Worker] -> Financial
+
+[Financial Tracker MFE] --> [API Gateway]
+
+@enduml
