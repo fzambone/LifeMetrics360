@@ -10,7 +10,7 @@ import (
 // ConnectToDatabase connects to the MongoDB database
 func ConnectToDatabase() (*mongo.Client, error) {
 	// TODO: Fix connection string for mongoDB
-	connectionString := "mongodb://localhost:27017"
+	connectionString := "mongodb+srv://user_life_metrics_360:375au8uIvnreuWLw@cluster0.lsw8mua.mongodb.net/?retryWrites=true&w=majority"
 
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(connectionString))
 	if err != nil {
