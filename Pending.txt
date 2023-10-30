@@ -1,0 +1,22 @@
+Error Handling:
+
+In the ConnectToDatabase function, after connecting to the MongoDB instance, it's a good practice to ping the database to ensure that the connection has been established correctly. Add a ping right after connecting:
+go
+Copy code
+err = client.Ping(context.Background(), nil)
+if err != nil {
+    log.Printf("Could not connect to database: %v", err)
+    return nil, err
+}
+Handle potential errors from the cursor.Close(context.Background()) call after processing all documents in the FindAllExpenses function.
+
+Refactoring:
+
+Create a global variable for the database name and collections you're working with, so if they change in the future, you only need to update them in one place.
+Consider adding a timeout to your context to avoid hanging operations, especially for database operations. For example:
+
+Decoding:
+
+Logging: Consider using structured logging with fields instead of formatted strings. Libraries like logrus or zap can help with this.
+
+Database Functions Return Types: Instead of returning just an error from your database functions, consider returning the result and the error. This makes your functions more versatile and the calling code can make decisions based on the returned data.
