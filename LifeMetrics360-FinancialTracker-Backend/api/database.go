@@ -15,7 +15,6 @@ import (
 func ConnectToDatabase() *mongo.Client {
 
 	connectionString := os.Getenv("MONGO_URI")
-
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(connectionString))
 	if err != nil {
 		Log.WithFields(logrus.Fields{
