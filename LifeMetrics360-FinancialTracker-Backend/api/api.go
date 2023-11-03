@@ -43,7 +43,6 @@ func CreateExpense(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	Log.Info("Successfully decoded JSON request")
 
 	// Validate the Expense
 	// Check if all the required fields are present

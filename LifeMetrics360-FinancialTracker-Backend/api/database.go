@@ -39,8 +39,8 @@ func Close(client *mongo.Client) {
 }
 
 // InsertExpense inserts a new expense record into the database.
-func InsertExpense(db *mongo.Client, expense Expense) (string, error) {
-	collection := db.Database("expenses").Collection("expenses")
+func InsertExpense(client *mongo.Client, expense Expense) (string, error) {
+	collection := client.Database("financial_tracker").Collection("expenses")
 
 	result, err := collection.InsertOne(context.Background(), expense)
 	if err != nil {
@@ -53,14 +53,13 @@ func InsertExpense(db *mongo.Client, expense Expense) (string, error) {
 
 	//Convert the inserted ID to string
 	insertedID := result.InsertedID.(primitive.ObjectID).Hex()
-	Log.Info("Successfully inserted expense %v", insertedID)
 	return insertedID, nil
 }
 
 // FindAllExpenses gets all the expense records from the database
 func FindAllExpenses(client *mongo.Client) []Expense {
 
-	collection := client.Database("life_metrics_360").Collection("expenses")
+	collection := client.Database("financial_tracker").Collection("expenses")
 
 	cursor, err := collection.Find(context.Background(), bson.M{})
 
@@ -91,7 +90,7 @@ func FindAllExpenses(client *mongo.Client) []Expense {
 			}).Error("Error decoding expense record: %v", err)
 			return nil
 		}
-		Log.Info("Successfully decoded expense %v", expense)
+		Log.Info("Successfully decoded expense ", expense)
 		expenses = append(expenses, expense)
 	}
 
