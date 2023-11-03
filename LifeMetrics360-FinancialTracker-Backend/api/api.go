@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -17,10 +18,76 @@ type Expense struct {
 	Date     string             `json:"date"`
 }
 
+func (e *Expense) Validate() error {
+	if e.Merchant == "" {
+		return errors.New("merchant cannot be empty")
+	}
+	if e.Amount <= 0 {
+		return errors.New("amount must be greater than 0")
+	}
+	if e.Date == "" {
+		return errors.New("date cannot be empty")
+	}
+	if e.Category == "" {
+		return errors.New("category cannot be empty")
+	}
+	return nil
+}
+
 func RegisterRoutes(r *gin.Engine) {
 	// Define API endpoints here
 	r.GET("/expenses", GetExpenses)
 	r.POST("/expenses", CreateExpense)
+	r.PUT("/expenses/:id", UpdateExpense)
+}
+
+func UpdateExpense(c *gin.Context) {
+	// Connect to Database
+	db := ConnectToDatabase()
+	defer func(client *mongo.Client) {
+		Close(client)
+	}(db)
+
+	// Get te expense ID from the URL parameters
+	expenseID, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		logrus.WithError(err).Error("Invalid ObjectID format")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "missing expense ID"})
+		return
+	}
+
+	// Decode the JSON request body
+	var updatedExpense Expense
+	if err := c.ShouldBindJSON(&updatedExpense); err != nil {
+		Log.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("Error decoding JSON request body")
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Validate the updated expense data
+	if err := updatedExpense.Validate(); err != nil {
+		Log.WithError(err).Error("Error validating expense")
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Update the expense in the database
+	err = UpdateExpenseInDB(db, expenseID, updatedExpense)
+	if err != nil {
+		Log.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("Error updating expense in database")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Update successful
+	Log.WithFields(logrus.Fields{
+		"expenseID": expenseID,
+	}).Info("Expense updated successfully")
+	c.JSON(http.StatusOK, gin.H{"message": "Expense updated successfully"})
 }
 
 func CreateExpense(c *gin.Context) {

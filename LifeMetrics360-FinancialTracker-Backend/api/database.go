@@ -35,10 +35,27 @@ func Close(client *mongo.Client) {
 		}).Error("Error closing database connection: %v", err)
 	}
 
-	Log.Info("Successfully closed database connection")
+	Log.Info("Database connection closed")
 }
 
-// InsertExpense inserts a new expense record into the database.
+// UpdateExpenseInDB updates the expense record in the database
+func UpdateExpenseInDB(client *mongo.Client, expenseID primitive.ObjectID, updatedExpense Expense) error {
+	// Select the database and collection
+	collection := client.Database("financial_tracker").Collection("expenses")
+
+	// Define the update document
+	update := bson.M{"$set": updatedExpense}
+
+	// Update the expense
+	_, err := collection.UpdateByID(context.TODO(), expenseID, update)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// InsertExpense inserts a new expense record into the database
 func InsertExpense(client *mongo.Client, expense Expense) (string, error) {
 	collection := client.Database("financial_tracker").Collection("expenses")
 
