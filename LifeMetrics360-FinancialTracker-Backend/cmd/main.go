@@ -2,9 +2,12 @@ package main
 
 import (
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/api"
+	"github.com/fzambone/LifeMetrics360-FinancialTracker/handlers"
+	"github.com/fzambone/LifeMetrics360-FinancialTracker/services"
+	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"log"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -13,12 +16,26 @@ func main() {
 
 	// Read .env file
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
+		logrus.WithError(err).Fatal("Could not load env file")
 	}
 
-	r := gin.Default()
+	// Open new database connection
+	db, err := utils.NewDatabase()
+	if err != nil {
+		logrus.WithError(err).Fatal("Could not connect to the database")
+	}
+	defer db.Close()
 
-	api.RegisterRoutes(r)
+	// Create an instance of ExpenseService
+	expenseService := services.NewExpenseService(db)
 
-	r.Run()
+	router := gin.Default()
+
+	// Create an instance of Handlers with a db dependency
+	h := handlers.NewHandlers(db, expenseService)
+
+	// Register API routes
+	api.RegisterRoutes(router, h)
+
+	router.Run(":8080")
 }
