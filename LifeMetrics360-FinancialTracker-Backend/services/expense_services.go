@@ -12,26 +12,26 @@ import (
 const expenseCollection = "expenses"
 
 type ExpenseService struct {
-	DB *utils.Database
+	DB utils.DatabaseHelper
 }
 
-func NewExpenseService(db *utils.Database) *ExpenseService {
+func NewExpenseService(db utils.DatabaseHelper) *ExpenseService {
 	return &ExpenseService{DB: db}
 }
 
 // InsertExpense inserts a new expense into the database
 func (s *ExpenseService) InsertExpense(ctx context.Context, expense models.Expense) (primitive.ObjectID, error) {
-	res, err := s.DB.Collection(expenseCollection).InsertOne(ctx, expense)
+	res, err := s.DB.InsertOne(ctx, expenseCollection, expense)
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
-	return res.InsertedID.(primitive.ObjectID), nil
+	return res, nil
 }
 
 // FindAllExpenses retrieves all expenses from the database
 func (s *ExpenseService) FindAllExpenses() ([]models.Expense, error) {
 	var expenses []models.Expense
-	cursor, err := s.DB.Collection(expenseCollection).Find(context.Background(), bson.D{})
+	cursor, err := s.DB.Find(context.Background(), expenseCollection, bson.D{})
 	if err != nil {
 		return nil, err
 	}
@@ -45,13 +45,13 @@ func (s *ExpenseService) FindAllExpenses() ([]models.Expense, error) {
 func (s *ExpenseService) UpdateExpense(ctx context.Context, id primitive.ObjectID, updatedExpense models.Expense) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": updatedExpense}
-	result, err := s.DB.Collection(expenseCollection).UpdateOne(ctx, filter, update)
+	result, err := s.DB.UpdateOne(ctx, expenseCollection, filter, update)
 	if err != nil {
 		return err
 	}
 
 	// Verify if Expense exists
-	if result.MatchedCount == 0 {
+	if result.MatchedCount() == 0 {
 		return errors.New("no document found with the specified ID")
 	}
 

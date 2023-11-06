@@ -9,6 +9,6 @@ func HandleError(c *gin.Context, statusCode int, message string) {
 }
 
 // HandleInfo takes care of sending a uniform info message
-func HandleInfo(c *gin.Context, statusCode int, message string) {
-	c.JSON(statusCode, gin.H{"info": message})
-}
+//func HandleInfo(c *gin.Context, statusCode int, message string) {
+//	c.JSON(statusCode, gin.H{"info": message})
+//}
