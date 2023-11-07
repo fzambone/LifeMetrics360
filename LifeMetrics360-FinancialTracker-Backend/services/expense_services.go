@@ -7,6 +7,7 @@ import (
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 )
 
 const expenseCollection = "expenses"
@@ -52,6 +53,22 @@ func (s *ExpenseService) UpdateExpense(ctx context.Context, id primitive.ObjectI
 
 	// Verify if Expense exists
 	if result.MatchedCount() == 0 {
+		return errors.New("no document found with the specified ID")
+	}
+
+	return nil
+}
+
+// DeleteExpense deletes an existing expense by ID
+func (s *ExpenseService) DeleteExpense(ctx context.Context, id primitive.ObjectID) error {
+	filter := bson.M{"_id": id}
+	log.Print(filter)
+	result, err := s.DB.DeleteOne(ctx, expenseCollection, filter)
+	if err != nil {
+		return err
+	}
+
+	if result.DeletedCount() == 0 {
 		return errors.New("no document found with the specified ID")
 	}
 

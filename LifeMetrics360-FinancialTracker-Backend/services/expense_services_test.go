@@ -2,7 +2,6 @@ package services
 
 import (
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"testing"
 )
 
@@ -14,11 +13,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var mockDB = new(MockDB)
-var service = NewExpenseService(mockDB)
 var ctx = context.TODO()
 
 func TestExpenseService_InsertExpense(t *testing.T) {
+	mockDB := new(MockDB)
+	service := NewExpenseService(mockDB)
 
 	// create a new expense and the expected ID that would be returned
 	expense := models.Expense{
@@ -42,6 +41,9 @@ func TestExpenseService_InsertExpense(t *testing.T) {
 }
 
 func TestExpenseService_FindAllExpenses(t *testing.T) {
+	mockDB := new(MockDB)
+	service := NewExpenseService(mockDB)
+
 	expectedExpenses := []models.Expense{
 		{
 			ID:       primitive.NewObjectID(),
@@ -59,8 +61,20 @@ func TestExpenseService_FindAllExpenses(t *testing.T) {
 		},
 	}
 
+	// Create the MockCursor with expected expenses
+	mockCursor := new(MockCursor)
+	mockCursor.Data = make([]interface{}, len(expectedExpenses))
+	for i, v := range expectedExpenses {
+		mockCursor.Data[i] = v
+	}
+
+	mockCursor.On("All", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		arg := args.Get(1).(*[]models.Expense)
+		*arg = expectedExpenses
+	}).Return(nil)
+
 	// Set up the mock expectations
-	mockDB.On("Find", mock.AnythingOfType("*context.emptyCtx"), expenseCollection, bson.D{}).Return(expectedExpenses, nil)
+	mockDB.On("Find", context.Background(), expenseCollection, bson.D{}).Return(mockCursor, nil)
 
 	// Test the FindAllExpenses function
 	expenses, err := service.FindAllExpenses()
@@ -68,9 +82,20 @@ func TestExpenseService_FindAllExpenses(t *testing.T) {
 	// Assert that the expectations are met
 	assert.NoError(t, err)
 	assert.Equal(t, expectedExpenses, expenses)
+
+	// Verify that ALL was called on the cursor
+	mockCursor.AssertExpectations(t)
 }
 
 func TestExpenseService_UpdateExpense(t *testing.T) {
+	mockDB := new(MockDB)
+	service := NewExpenseService(mockDB)
+
+	mockUpdatedResult := new(MockUpdateResult)
+	mockUpdatedResult.On("MatchedCount").Return(int64(1))
+	mockUpdatedResult.On("ModifiedCount").Return(int64(1))
+	mockUpdatedResult.On("UpsertedCount").Return(int64(0))
+	mockUpdatedResult.On("UpsertedID").Return(nil)
 	expenseID := primitive.NewObjectID()
 	updatedExpense := models.Expense{
 		Amount:   200,
@@ -79,15 +104,8 @@ func TestExpenseService_UpdateExpense(t *testing.T) {
 		Date:     "2023-11-05",
 	}
 
-	updateResult := &mongo.UpdateResult{
-		MatchedCount:  1,
-		ModifiedCount: 1,
-		UpsertedCount: 0,
-		UpsertedID:    nil,
-	}
-
 	// Set up the mock expectations
-	mockDB.On("UpdateOne", ctx, expenseCollection, bson.M{"_id": expenseID}, bson.M{"$set": updatedExpense}).Return(updateResult, nil)
+	mockDB.On("UpdateOne", ctx, expenseCollection, bson.M{"_id": expenseID}, bson.M{"$set": updatedExpense}).Return(mockUpdatedResult, nil)
 
 	// Test the UpdateExpense function
 	err := service.UpdateExpense(ctx, expenseID, updatedExpense)

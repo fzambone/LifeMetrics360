@@ -26,14 +26,28 @@ type UpdateResultHelper interface {
 	UpsertedID() interface{}
 }
 
+// DeleteResultHelper abstracts the methods used from the result of a database delete operation.
+type DeleteResultHelper interface {
+	DeletedCount() int64
+}
+
 type DatabaseHelper interface {
 	InsertOne(ctx context.Context, collection string, document interface{}) (primitive.ObjectID, error)
 	Find(ctx context.Context, collection string, filter interface{}) (CursorHelper, error)
 	UpdateOne(ctx context.Context, collection string, filter interface{}, update interface{}) (UpdateResultHelper, error)
+	DeleteOne(ctx context.Context, collection string, filter interface{}) (DeleteResultHelper, error)
 }
 
 type Database struct {
 	Client *mongo.Client
+}
+
+type updateResultWrapper struct {
+	*mongo.UpdateResult
+}
+
+type deleteResultWrapper struct {
+	*mongo.DeleteResult
 }
 
 // NewDatabase creates a new Database instance
@@ -92,14 +106,53 @@ func (db *Database) InsertOne(ctx context.Context, collection string, document i
 	return oid, nil
 }
 
-// Find implements the DatabaseHelper interface method for finding documents
+// Find implements the CursorHelper interface method for finding documents
 func (db *Database) Find(ctx context.Context, collection string, filter interface{}) (CursorHelper, error) {
-	//TODO: implement logic
-	return nil, nil
+	coll := db.Client.Database("financial_tracker").Collection(collection)
+
+	cursor, err := coll.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	return cursor, nil
 }
 
-// UpdateOne implements the DatabaseHelper interface method for finding documents
+// UpdateOne implements the UpdateResultHelper interface method for updating one document
 func (db *Database) UpdateOne(ctx context.Context, collection string, filter interface{}, update interface{}) (UpdateResultHelper, error) {
-	//TODO: implement logic
-	return nil, nil
+	coll := db.Client.Database("financial_tracker").Collection(collection)
+
+	result, err := coll.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return nil, err
+	}
+
+	// Wrap the mongo.UpdateResult in a type that satisfies UpdateResultHelper
+	return &updateResultWrapper{result}, nil
+}
+
+func (u *updateResultWrapper) MatchedCount() int64 {
+	return u.UpdateResult.MatchedCount
+}
+
+func (u *updateResultWrapper) ModifiedCount() int64 {
+	return u.UpdateResult.ModifiedCount
+}
+
+func (u *updateResultWrapper) UpsertedID() interface{} {
+	return u.UpdateResult.UpsertedID
+}
+
+// DeleteOne implements the DeleteHelper interface method for deleting one document
+func (db *Database) DeleteOne(ctx context.Context, collection string, filter interface{}) (DeleteResultHelper, error) {
+	coll := db.Client.Database("financial_tracker").Collection(collection)
+	result, err := coll.DeleteOne(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	return &deleteResultWrapper{result}, nil
+}
+
+func (d *deleteResultWrapper) DeletedCount() int64 {
+	return d.DeleteResult.DeletedCount
 }

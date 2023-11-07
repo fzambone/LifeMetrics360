@@ -15,4 +15,5 @@ func RegisterRoutes(router *gin.Engine, h *handlers.Handlers) {
 	router.GET("/expenses", h.GetAllExpenses)
 	router.POST("/expenses", h.CreateExpense)
 	router.PUT("/expenses/:id", h.UpdateExpense)
+	router.DELETE("/expenses/:id", h.DeleteExpense)
 }
