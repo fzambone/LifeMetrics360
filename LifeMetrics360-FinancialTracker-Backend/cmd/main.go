@@ -5,6 +5,7 @@ import (
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/handlers"
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/services"
 	"github.com/fzambone/LifeMetrics360-Utils-Backend/utils"
+	utils2 "github.com/fzambone/LifeMetrics360/LifeMetrics360-Utils-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
@@ -12,7 +13,7 @@ import (
 
 func main() {
 	// Initialize logrus
-	api.InitLogger()
+	utils2.InitLogger()
 
 	// Read .env file
 	if err := godotenv.Load(); err != nil {

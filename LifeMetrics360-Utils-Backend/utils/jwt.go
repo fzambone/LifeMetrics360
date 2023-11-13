@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 	"time"

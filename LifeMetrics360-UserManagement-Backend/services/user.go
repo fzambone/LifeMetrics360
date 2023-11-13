@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/fzambone/LifeMetrics360-UserManagement/models"
 	"github.com/fzambone/LifeMetrics360/LifeMetrics360-Utils-Backend/utils"
-	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -17,11 +16,17 @@ func NewUserService(db utils.DatabaseHelper) *UserService {
 }
 
 func (s *UserService) CreateUser(ctx context.Context, user models.User) (primitive.ObjectID, error) {
-	result, err := s.DB.InsertOne(ctx, "users", user)
-	if err != nil {
-		logrus.WithError(err).Error("Failed to create user")
-		return primitive.NilObjectID, err
-	}
+	// TODO: Implement create user logic
+}
 
-	return result, nil
+func (s *UserService) GetUser(id string) (*models.User, error) {
+	// TODO: Implement retrieval logic
+}
+
+func (s *UserService) UpdateUser(id string) (*models.User, error) {
+	// TODO: Implement update user logic
+}
+
+func (s *UserService) DeleteUser(id string) (primitive.ObjectID, error) {
+	// TODO: Implement delete user logic
 }
