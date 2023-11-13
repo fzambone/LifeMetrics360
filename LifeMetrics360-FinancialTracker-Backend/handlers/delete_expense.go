@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
+	"github.com/fzambone/LifeMetrics360-Utils-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/services"
-	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
+	"github.com/fzambone/LifeMetrics360-Utils-Backend/utils"
 )
 
 type Handlers struct {

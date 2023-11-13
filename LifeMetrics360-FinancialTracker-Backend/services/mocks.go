@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
+	"github.com/fzambone/LifeMetrics360-Utils-Backend/utils"
 	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"reflect"

@@ -4,7 +4,7 @@ import (
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/api"
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/handlers"
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/services"
-	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
+	"github.com/fzambone/LifeMetrics360-Utils-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"

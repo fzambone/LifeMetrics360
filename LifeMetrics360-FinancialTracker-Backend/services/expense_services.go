@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/fzambone/LifeMetrics360-FinancialTracker/models"
-	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
+	"github.com/fzambone/LifeMetrics360-Utils-Backend/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
