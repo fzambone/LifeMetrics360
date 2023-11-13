@@ -2,8 +2,8 @@ package services
 
 import (
 	"context"
-	"github.com/fzambone/LifeMetrics360-FinancialTracker/utils"
 	"github.com/fzambone/LifeMetrics360-UserManagement/models"
+	"github.com/fzambone/LifeMetrics360/LifeMetrics360-Utils-Backend/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

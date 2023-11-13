@@ -1,4 +1,4 @@
-module github.com/fzambone/LifeMetrics360-Utils-Backend
+module github.com/fzambone/LifeMetrics360/LifeMetrics360-Utils-Backend
 
 go 1.21.3
 
