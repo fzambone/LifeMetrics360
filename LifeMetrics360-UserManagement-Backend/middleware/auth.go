@@ -4,7 +4,7 @@ import "github.com/labstack/echo/v4"
 
 func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// TODO: Implement JWT calidation
+		// TODO: Implement JWT validation
 		return next(c)
 	}
 }

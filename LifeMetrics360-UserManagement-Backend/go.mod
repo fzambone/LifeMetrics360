@@ -3,7 +3,7 @@ module github.com/fzambone/LifeMetrics360-UserManagement
 go 1.21.3
 
 require (
-	github.com/fzambone/LifeMetrics360/LifeMetrics360-Utils-Backend v0.0.0-20231113013621-8f3aad70bdcd
+	github.com/fzambone/LifeMetrics360/LifeMetrics360-Utils-Backend v0.0.0-20231113142357-c20eb1670b75
 	github.com/labstack/echo-jwt/v4 v4.2.0
 	github.com/labstack/echo/v4 v4.11.2
 	go.mongodb.org/mongo-driver v1.13.0
@@ -23,6 +23,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
@@ -53,3 +54,5 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/fzambone/LifeMetrics360/LifeMetrics360-Utils-Backend => ../LifeMetrics360-Utils-Backend
