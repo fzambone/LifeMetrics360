@@ -8,15 +8,15 @@ import (
 	"net/http"
 )
 
-type Handlers struct {
+type UserHandlers struct {
 	UserService *services.UserService
 }
 
-func NewHandlers(userService *services.UserService) *Handlers {
-	return &Handlers{UserService: userService}
+func NewUserHandlers(userService *services.UserService) *UserHandlers {
+	return &UserHandlers{UserService: userService}
 }
 
-func (h *Handlers) CreateUser(c echo.Context) error {
+func (h *UserHandlers) CreateUser(c echo.Context) error {
 	user := new(models.User)
 	if err := c.Bind(user); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -41,7 +41,7 @@ func (h *Handlers) CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, user)
 }
 
-func (h *Handlers) GetUser(c echo.Context) error {
+func (h *UserHandlers) GetUser(c echo.Context) error {
 	userID := c.Param("id")
 
 	// Retrieving user from database
@@ -53,7 +53,7 @@ func (h *Handlers) GetUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func (h *Handlers) UpdateUser(c echo.Context) error {
+func (h *UserHandlers) UpdateUser(c echo.Context) error {
 	userID := c.Param("id")
 	updateData := new(models.User)
 	if err := c.Bind(updateData); err != nil {
@@ -69,7 +69,7 @@ func (h *Handlers) UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, "User updated successfully")
 }
 
-func (h *Handlers) DeleteUser(c echo.Context) error {
+func (h *UserHandlers) DeleteUser(c echo.Context) error {
 	userID := c.Param("id")
 
 	// Delete user from database

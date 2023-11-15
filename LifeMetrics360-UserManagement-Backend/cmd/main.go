@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/fzambone/LifeMetrics360-UserManagement/handlers"
+	customMiddleware "github.com/fzambone/LifeMetrics360-UserManagement/middleware"
 	"github.com/fzambone/LifeMetrics360-UserManagement/services"
 	"github.com/fzambone/LifeMetrics360-UserManagement/utils"
 	"github.com/joho/godotenv"
@@ -24,6 +25,8 @@ func main() {
 		logrus.WithError(err).Error("Error loading .env file")
 	}
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+
 	// Connect to MongoDB
 	db, err := utils.NewDatabase()
 	if err != nil {
@@ -34,19 +37,26 @@ func main() {
 	// Middlewares
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(echojwt.WithConfig(echojwt.Config{
-		SigningKey: []byte("mysecret"),
-	}))
+
+	// Custom Middlewares
+	e.Use(customMiddleware.ErrorLoggingMiddleware)
+	e.Use(customMiddleware.InfoLoggingMiddleware)
 
 	// Initialize handlers with db connection
 	userService := services.NewUserService(db)
-	handlerInstance := handlers.NewHandlers(userService)
+	avatarService := services.NewAvatarService(db)
+	userHandlerInstance := handlers.NewUserHandlers(userService)
+	avatarHandlerInstance := handlers.NewAvatarHandlers(avatarService)
 
 	// Routes
-	e.POST("/users", handlerInstance.CreateUser)
-	e.GET("/users:id", handlerInstance.GetUser)
-	e.PUT("/users:id", handlerInstance.UpdateUser)
-	e.DELETE("/users:id", handlerInstance.DeleteUser)
+	e.GET("/avatar/:email", avatarHandlerInstance.Avatar)
+	e.POST("/login", userHandlerInstance.Login)
+	e.POST("/users", userHandlerInstance.CreateUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))
+	e.GET("/users/:id", userHandlerInstance.GetUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))
+	e.PUT("/users/:id", userHandlerInstance.UpdateUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))
+	e.DELETE("/users/:id", userHandlerInstance.DeleteUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))
+
+	log.Println(jwtSecret)
 
 	// Start server
 	go func() {
