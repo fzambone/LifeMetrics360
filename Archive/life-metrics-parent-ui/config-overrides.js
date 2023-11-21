@@ -9,7 +9,18 @@ module.exports = override(
                 remotes: {
                     auth_mfe: 'auth_mfe@http://localhost:3001/remoteEntry.js',
                 },
-                shared: require('./package.json').dependencies,
+                shared: {
+                    react: {
+                        singleton: true,
+                        eager: false,
+                        requiredVersion: "18.2.0",
+                    },
+                    'react-dom': {
+                        singleton: true,
+                        eager: false,
+                        requiredVersion: "18.2.0",
+                    }
+                }
             })
         );
         return config;

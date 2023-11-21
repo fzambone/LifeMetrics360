@@ -15,12 +15,12 @@ module.exports = override(
                 shared: {
                     react: {
                         singleton: true,
-                        eager: true,
+                        eager: false,
                         requiredVersion: "18.2.0",
                     },
                     'react-dom': {
                         singleton: true,
-                        eager: true,
+                        eager: false,
                         requiredVersion: "18.2.0",
                     },
                 },
