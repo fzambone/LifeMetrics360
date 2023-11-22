@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 )
 
 const userCollection = "users"
@@ -44,12 +45,13 @@ func (s *UserService) GetUserByID(ctx context.Context, id string) (*models.User,
 	return &user, nil
 }
 
-func (s *UserService) GetUserByUsername(ctx context.Context, username string) (*models.User, error) {
+func (s *UserService) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
 	var user models.User
 
-	if err := s.DB.Collection(userCollection).FindOne(ctx, bson.M{"username": username}).Decode(&user); err != nil {
+	if err := s.DB.Collection(userCollection).FindOne(ctx, bson.M{"email": email}).Decode(&user); err != nil {
 		return nil, err
 	}
+
 	return &user, nil
 }
 
@@ -88,16 +90,20 @@ func (s *UserService) DeleteUser(ctx context.Context, userID string) error {
 }
 
 // ValidateUserCredentials validates a user's credentials
-func (s *UserService) ValidateUserCredentials(ctx context.Context, username, password string) (*models.User, error) {
-	user, err := s.GetUserByUsername(ctx, username)
+func (s *UserService) ValidateUserCredentials(ctx context.Context, email, password string) (*models.User, error) {
+	user, err := s.GetUserByEmail(ctx, email)
 	if err != nil {
 		return nil, err
 	}
 
+	log.Println(user.ID)
+	log.Println(user.Email)
+	log.Println(user.Password)
+
 	// Compare the provided password with the hashed password stored in the database
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return nil, errors.New("invalida credentials")
+		return nil, errors.New("invalid credentials")
 	}
 
 	return user, nil

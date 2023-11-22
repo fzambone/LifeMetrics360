@@ -6,7 +6,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 0;
+  /* z-index: 0; */
   
 }
 
@@ -25,27 +25,6 @@ body, html {
   color: #681cda
 }
 
-.auth-form {
-  background: #342e53;
-  padding: 40px 50px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
-  width: 400px;
-  box-sizing: border-box;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-  margin-top: -150px;
-}
-
-.auth-form h2 {
-  font-size: 2rem;
-  color: #ffffff;
-  font-size: 2rem;
-  line-height: 1.2;
-  text-align: left;
-}
-
 form input {
   background: none;
   width: 100%;
@@ -55,6 +34,7 @@ form input {
   border-bottom: 2px solid #ccc;
   box-sizing: border-box;
   font-size: 1rem;
+  color: #b2bec3;
 }
 
 form button {
@@ -73,28 +53,7 @@ form button:hover {
   background-image: linear-gradient(to right, #873ee7, #a226bb);
 }
 
-.auth-form .form-link {
-  color: #74b9ff;
-  text-decoration: underline;
-  font-size: 0.875rem;
-  display: block;
-  margin: 1rem 0;
-}
-
-.auth-form, .auth-form input, .auth-form .form-link {
-  color: #b2bec3;
-}
-
 form input:focus {
   outline: none;
   border-bottom: 2px solid #0984e3;
-}
-
-.auth-form .form-link:hover {
-  color: white;
-}
-
-.auth-form p {
-  color: #636e72;
-  font-size: 0.75rem;
 }

@@ -1,0 +1,49 @@
+.authForm {
+    background: #342e53;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+    width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+    position: relative;
+    /* z-index: 1; */
+    margin-top: -150px;
+    color: #b2bec3;
+}
+
+.authFormError {
+    color: #FF6B6B;
+    background-color: #FFEBEE;
+    border: 1px solid #FF6B81;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+  
+.authFormH2 {
+    font-size: 2rem;
+    color: #ffffff;
+    font-size: 2rem;
+    line-height: 1.2;
+    text-align: left;
+}
+  
+.authFormLink {
+    color: #b2bec3;
+    text-decoration: underline;
+    font-size: 0.875rem;
+    display: block;
+    margin: 1rem 0;
+}
+  
+.authFormLinkHover:hover {
+    color: white;
+}
+  
+.authFormP {
+    color: #636e72;
+    font-size: 0.75rem;
+}
