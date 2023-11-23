@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styles from '../../styles/AuthForm.module.css';
 import { loginUser } from '../../services/authService';
 import Spinner from '../../components/Spinner/Spinner';
@@ -10,6 +10,8 @@ const SignIn = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [loginSuccess, setLoginSuccess] = useState(false);
     const [loginError, setLoginError] = useState(false);
+    const location = useLocation();
+    const signUpMessage = location.state?.message;
 
     const handleLogin = async(event) => {
         event.preventDefault();
@@ -30,6 +32,12 @@ const SignIn = () => {
     return (
         <div className={styles.authForm}>
             <h2 className={styles.authFormH2}>Hello there, welcome back</h2>
+
+            {signUpMessage && (
+                <div className={styles.authFormSuccess}>
+                    {signUpMessage}
+                </div>
+            )}
 
             {loginError && (
                 <div className={styles.authFormError}>

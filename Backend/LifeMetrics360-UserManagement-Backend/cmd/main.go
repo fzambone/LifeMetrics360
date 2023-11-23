@@ -55,7 +55,7 @@ func main() {
 	// Routes
 	e.GET("/avatar/:email", avatarHandlerInstance.Avatar)
 	e.POST("/login", userHandlerInstance.Login)
-	e.POST("/users", userHandlerInstance.CreateUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))
+	e.POST("/users", userHandlerInstance.CreateUser)
 	e.GET("/users/:id", userHandlerInstance.GetUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))
 	e.PUT("/users/:id", userHandlerInstance.UpdateUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))
 	e.DELETE("/users/:id", userHandlerInstance.DeleteUser, echojwt.WithConfig(echojwt.Config{SigningKey: []byte(jwtSecret)}))

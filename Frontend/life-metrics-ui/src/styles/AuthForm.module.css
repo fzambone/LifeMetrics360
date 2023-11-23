@@ -12,6 +12,17 @@
     color: #b2bec3;
 }
 
+.authFormSuccess {
+    color: #2e7d32;
+    background-color: #e8f5e9;
+    border: 1px solid #66bb6a;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
 .authFormError {
     color: #FF6B6B;
     background-color: #FFEBEE;
