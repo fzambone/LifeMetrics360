@@ -11,7 +11,7 @@ const signUpUser = async (email, password, firstName, lastName) => {
         });
         return response.data;
     } catch(error) {
-        console.error('Registration error:', error.response.data);
+        // console.error('Registration error:', error.response.data);
         throw error;
     }
     // throw new Error("Signup failed for testing purposes");

@@ -9,7 +9,7 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [loginSuccess, setLoginSuccess] = useState(false);
-    const [loginError, setLoginError] = useState(false);
+    const [loginError, setLoginError] = useState('');
     const location = useLocation();
     const signUpMessage = location.state?.message;
 
@@ -24,7 +24,7 @@ const SignIn = () => {
         } catch(error) {
             setIsLoading(false);
             setLoginSuccess(false);
-            setLoginError(true);
+            setLoginError('Invalid credentials!');
             // TODO: Handle login error
         }
     };
@@ -41,7 +41,7 @@ const SignIn = () => {
 
             {loginError && (
                 <div className={styles.authFormError}>
-                    Invalid credentials!
+                    {loginError}
                 </div>
             )}
 

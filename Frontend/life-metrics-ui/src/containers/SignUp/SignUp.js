@@ -9,35 +9,35 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    // const [signUpSuccess, setSignUpSuccess] = useState(false);
     const [signUpError, setSignUpError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); 
+    const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
 
     const handleSignUp = async(event) => {
+        
+        const doPasswordsMatch = () => {
+            return password === confirmPassword;
+        };
+        
         event.preventDefault();
+        
+        if (!doPasswordsMatch()) {
+            setSignUpError('Passwords do not match.');
+            return;
+        }
+
         setIsLoading(true);
         try {
             const userData = await signUpUser(email, password, firstName, lastName);
-            // setSignUpSuccess(true);
             setSignUpError('');
             navigate('/signin', {state: { fromSignUp: true, message: 'Registration sucessful. Please log in.'} });
         } catch(error) {
             setSignUpError('Signup failed. Please try again.');
-            // setSignUpSuccess(false);
         } finally {
             setIsLoading(false);
         }
     };
-
-    // if(signUpSuccess) {
-    //     return (
-    //         <div className={styles.authFormSuccess}>
-    //             Registration successful! Please check your email to confirm your accocunt.
-    //             {/* TODO: Add button or link to resend email */}
-    //         </div>
-    //     );
-    // }
     
     return (
         <div className={styles.authForm}>
@@ -55,7 +55,7 @@ const SignUp = () => {
                     <input type='text' placeholder='Last Name' value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                     <input type='email' placeholder='E-mail' value={email} onChange={(e) => setEmail(e.target.value)} required />
                     <input type='password' placeholder='Enter Password' value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    <input type='password' placeholder='Confirm Password' required />
+                    <input type='password' placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                     <p className={styles.authFormP}>
                         By creating an account, you agree to the
                         <Link to='/terms' className={`${styles.authFormLink} ${styles.authFormLinkHover}`}> Terms and Use</Link> and
